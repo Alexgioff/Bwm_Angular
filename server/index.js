@@ -1,18 +1,23 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const config = require('./config/dev');
-const FakeDb = require('./fake-db');
-const rentalRoutes = require('./routes/rentals');
+const express             = require('express');
+const mongoose            = require('mongoose');
+const bodyParser          = require('body-parser');
+const config              = require('./config/dev');
+const FakeDb              = require('./fake-db');
+const rentalRoutes        = require('./routes/rentals');
+const userRoutes          = require('./routes/user');
 
-mongoose.connect(config.DB_URI)
+mongoose.connect(config.DB_URI, { useNewUrlParser: true, useCreateIndex: true })
         .then(() => {
-          const fakeDb = new FakeDb();
-          fakeDb.seedDb();
-        });
+             const fakeDb = new FakeDb();
+            fakeDb.seedDb();
+});
 
 const app = express();
 
+app.use(bodyParser.json());
+
 app.use('/api/v1/rentals', rentalRoutes);
+app.use('/api/v1/users', userRoutes);
 
 const PORT = process.env.PORT || 3001;
 
