@@ -12,10 +12,15 @@ const rentalSchema = new Schema({
   description:    {type: String, required: true},
   dailyRate:      Number,
   createdAt:      {type: Date, default: Date.now},
-  user: [
+  user:
     {
       type: Schema.Types.ObjectId,
       ref: 'User'
+    },
+  bookings: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Booking'
     }
   ]
 });

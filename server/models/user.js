@@ -29,6 +29,12 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Rental'
     }
+  ],
+  bookings: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Booking'
+    }
   ]
 });
 
