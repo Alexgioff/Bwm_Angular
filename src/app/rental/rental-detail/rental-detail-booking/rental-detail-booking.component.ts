@@ -77,7 +77,7 @@ export class RentalDetailBookingComponent implements OnInit {
    this.modalRef = this.modalService.open(content);
   }
 
-  createBooking(){
+  createBooking() {
     this.newBooking.rental = this.rental;
     this.bookingService.createBooking(this.newBooking).subscribe(
       (bookingData: any) => {
@@ -85,7 +85,7 @@ export class RentalDetailBookingComponent implements OnInit {
         this.newBooking = new Booking();
         this.modalRef.close();
         this.resetDatePicker();
-        this.toastr.success('Booking has been succefuly created, chek your bookin detail in manage section', 'Toastr fun!');
+        this.toastr.success('Booking has been succefuly created, chek your bookin detail in manage section', 'Success!');
       },
       (err: any) => {
         this.errors = err.error.errors;
