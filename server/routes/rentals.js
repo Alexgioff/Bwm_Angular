@@ -39,6 +39,18 @@ router.post('', UserCtrl.authMiddleware, function(req,res) {
   });
 });
 
+router.get('/manage', UserCtrl.authMiddleware, function(req, res){
+  const user = res.locals.user;
+  Rental.where({user})
+        .populate('bookings')
+        .exec((err, foundRentals) => {
+          if(err){
+            return res.status(422).send({errors: MongooseHelpers.normalizeErrors(err.errors)});
+          }
+          return res.json(foundRentals);
+        });
+});
+
 router.get(`/:id`, (req, res) => {
   Rental.findById(req.params.id)
         .populate('user', 'username -_id')
@@ -51,5 +63,39 @@ router.get(`/:id`, (req, res) => {
          return res.json(foundRental);
         });
 });
+
+router.delete('/:id', UserCtrl.authMiddleware, function(req, res){
+  const user = res.locals.user;
+
+  Rental.findById(req.params.id)
+        .populate('user', '_id')
+        .populate({
+          path: 'bookings',
+          select: 'startAt',
+          match: { startAt: { $gt: new Date()}}
+        })
+        .exec(function(err, foundRental){
+          if (err) {
+            return res.status(422).send({errors: MongooseHelpers.normalizeErrors(err.errors)});
+          }
+
+          if( foundRental.user.id !== user.id) {
+            return res.status(422).send({errors: [{title: 'Invalid User', detail: "it's not your Rental"}]});
+          }
+
+          if(foundRental.bookings.length > 0){
+            return res.status(422).send({errors: [{title: 'Active Bookings', detail: "Canot delete rental with active bookings"}]});
+          }
+
+          foundRental.remove((err) => {
+            if(err) {
+              return res.status(422).send({errors: MongooseHelpers.normalizeErrors(err.errors)});
+            }
+            return res.json({'status': 'deleted'});
+          });
+        });
+});
+
+
 
 module.exports = router;
