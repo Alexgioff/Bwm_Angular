@@ -1,6 +1,10 @@
 import { Booking } from '../../booking/shared/booking.model';
 
 export class Rental {
+
+  static readonly CATEGORIES = ['house', 'apartment', 'condo'];
+
+
   id: string;
   title: string;
   city: string;
@@ -13,4 +17,5 @@ export class Rental {
   shared: boolean;
   createdAt: string;
   bookings: Booking[];
+  _id: any;
 }
