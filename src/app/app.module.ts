@@ -10,6 +10,7 @@ import { RentalComponent } from './rental/rental.component';
 
 import { RentalModule } from './rental/rental.module';
 import { AuthModule } from './auth/auth.module';
+import { ManageModule } from './manage/manage.module';
 
 
 const routes: Routes = [
@@ -20,12 +21,14 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     RentalModule,
+    ManageModule,
     AuthModule,
     NgbModule.forRoot(),
     ToastrModule.forRoot(),
